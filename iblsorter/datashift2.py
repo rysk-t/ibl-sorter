@@ -464,6 +464,7 @@ def dartsort_detector(ctx, probe, params):
             mus[icc, :] = np.mean(chunk, axis=1)
     
         std = np.median(stds, axis=0)
+        std[~np.isfinite(std) | (std == 0)] = 1.0  # local fix: dead channels are all-zero after destriping; 1/0 made W non-finite and every sample a "spike"
         mu = np.median(mus, axis=0)
     
         W[idx] /= std[oob]
